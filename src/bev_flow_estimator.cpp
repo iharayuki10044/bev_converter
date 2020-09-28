@@ -19,7 +19,7 @@ BEVFlowEstimator::BEVFlowEstimator(void)
     nh.param("MAX_COUNT", MAX_COUNT, {30});
 	nh.param("FRAME_ID", FRAME_ID, {"odom"});
 	nh.param("CHILD_FRAME_ID", CHILD_FRAME_ID, {"base_footprint"});
-    nh.param("STEP_BORDER", STEP_BORDER, {5});
+    nh.param("STEP_BORDER", STEP_BORDER, {2});
     // nh.param("");
     nh.getParam("ROBOT_PARAM", ROBOT_PARAM);
 
@@ -52,7 +52,7 @@ void BEVFlowEstimator::executor(void)
 				if(cropped_transformed_grid_img.size() == cropped_current_grid_img.size()){
 					cropped_transformed_grid_img.convertTo(cropped_transformed_grid_img, CV_8U, 255);
 					cropped_current_grid_img.convertTo(cropped_current_grid_img, CV_8U, 255);
-					
+
 					/* std::cout << "imshow" << std::endl; */
 					/* cv::namedWindow("cropped_transformed_grid_img", CV_WINDOW_AUTOSIZE); */
 					/* cv::imshow("cropped_transformed_grid_img", cropped_transformed_grid_img); */
@@ -79,7 +79,7 @@ void BEVFlowEstimator::executor(void)
 					sensor_msgs::ImagePtr flow_img_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", flow_img).toImageMsg();
 					flow_image_publisher.publish(flow_img_msg);
 				}
-				
+
 				if(IS_SAVE_IMAGE){
 					std::vector<int> params(2);
 					// .png
@@ -135,7 +135,7 @@ void BEVFlowEstimator::odom_callback(const nav_msgs::OdometryConstPtr &msg)
 {
     nav_msgs::Odometry odom;
 	odom = *msg;
-    
+
 	current_position << odom.pose.pose.position.x, odom.pose.pose.position.y, odom.pose.pose.position.z;
     current_yaw = tf::getYaw(odom.pose.pose.orientation);
 
@@ -153,8 +153,8 @@ void BEVFlowEstimator::grid_callback(const nav_msgs::OccupancyGridConstPtr &msg)
 	/* std::cout << "grid_callback" << std::endl; */
 
 	nav_msgs::OccupancyGrid bev_grid = *msg;
-    
-    
+
+
     input_grid_img = cv::Mat::zeros(cv::Size(bev_grid.info.width,bev_grid.info.height), CV_8UC1);
 
     for(unsigned int col = 0; col < bev_grid.info.height; col++){
@@ -199,7 +199,7 @@ cv::Mat BEVFlowEstimator::flow_estimator(cv::Mat &pre_img, cv::Mat &cur_img)
 		cv::normalize(magnitude, magnitude, 1.0, 0.0, cv::NORM_L1);
 		hsv_planes[1] = magnitude;
 		hsv_planes[2] = cv::Mat::ones(magnitude.size(), CV_32F);
-		
+
 		cv::Mat hsv;
 		cv::merge(hsv_planes, 3, hsv);
 
@@ -236,7 +236,7 @@ cv::Mat BEVFlowEstimator::flow_estimator(cv::Mat &pre_img, cv::Mat &cur_img)
 		/* cv::normalize(magnitude, magnitude, 1.0, 0.0, cv::NORM_L1); */
 		hsv_planes[1] = magnitude;
 		hsv_planes[2] = cv::Mat::ones(magnitude.size(), CV_32F);
-		
+
 		cv::Mat hsv;
 		cv::merge(hsv_planes, 3, hsv);
 
