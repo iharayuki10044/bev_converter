@@ -52,32 +52,40 @@ public:
     typedef pcl::PointCloud<PointXYZ>::Ptr CloudXYZPtr;
     typedef pcl::PointCloud<PointN>::Ptr CloudNPtr;
 
-private:
-
-    CloudXYZI pointcloud;
-
     class GridCell
     {
     public:
         GridCell(void);
-        double get_occupancy(void);
-        double get_log_odds(void);
-        void add_log_odds(double);
 
-        std::map<double people[]> hit; 
+        bool people_existence = false;
+        int people_hit[people_num] = {0};
+        int people_id;
+
     private:
+    };
+    typedef std::vector<GridCell> OccupancyGridMap;
 
+    input_cloud_to_occupancy_grid_map(const CloudXYZIPtr& cloud_ptr);
+    transform_occupancy_grid_map(const Eigen::Vector2d& translation, double diff_yaw, OccupancyGridMap& map);
+    is_valid_point(double x, double y);
+    get_index_from_xy(const double x,const double y);
+    get_x_index_from_index(const int index);
+    get_y_index_from_index(const int index);
+    get_x_from_index(const int index);
+    get_y_from_index(const int index);
+
+
+
+private:
+
+    CloudXYZI pointcloud;
     double RESOLUTION;
-    double WIDTH;
+    double WIDTH;people_num
     double WIDTH_2;
     int GRID_WIDTH;
     int GRID_WIDTH_2;
     int GRID_NUM;
-  
-    };
-
-
-
+    int PEOPLE_NUM;
 
 }
 
