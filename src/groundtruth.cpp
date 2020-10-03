@@ -19,8 +19,18 @@ void GroundTruth::executor(void)
 
     ros::Rate r(Hz);
 	while(ros::ok()){
+        
+        OccupancyGridMap new_ogm(GRID_NUM);
+        OccupancyGridMap old_ogm(GRID_NUM);
 
-		if(grid_callback_flag){
+        input_cloud_to_occupancy_grid_map(cloud_ptr);
+        
+        
+        optical_flow_estimation(new_ogm, old_ogm);
+
+
+
+		if(){
 
 
         
