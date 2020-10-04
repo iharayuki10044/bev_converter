@@ -24,9 +24,9 @@ void GroundTruth::executor(void)
         OccupancyGridMap old_ogm(GRID_NUM);
 
         input_cloud_to_occupancy_grid_map(cloud_ptr);
-        
-        
-        optical_flow_estimation(new_ogm, old_ogm);
+        generate_flow_picture(new_ogm, old_ogm);
+
+
 
 
 
@@ -103,6 +103,13 @@ bool GroundTruth::is_valid_point(double x, double y)
     }
 }
 
+void GroundTruth::generate_flow_picture(OccupancyGridMap& old_map,OccupancyGridMap& new_map)
+{
+    //taiou grid tansaku
+    //map_posi hiukizan
+
+
+}
 void GroundTruth::transform_occupancy_grid_map(const Eigen::Vector2d& translation, double diff_yaw, OccupancyGridMap& map)
 {
     const double dx = translation(0);
