@@ -50,7 +50,7 @@ void GroundTruth::calculation_peple_point(const CloudXYZIPtr& cloud_ptr)
     std::cout << "--- calculation people point ---" << std::endl;
     int cloud_size = cloud_ptr->points.size();
 
-    Eigen::Matrix<double, 3, PEOPLE_NUM> people_point = MatrixXD::Zero(3, PEOPLE_NUM);
+    Eigen::Matrix<double, 3, PEOPLE_NUM> people_point = Eigen::MatrixXD::Zero(3, PEOPLE_NUM);
     //(x, y, hit_num)*people_num Zero init
 
     for(int i=0;i<cloud_size;i++){
@@ -60,7 +60,7 @@ void GroundTruth::calculation_peple_point(const CloudXYZIPtr& cloud_ptr)
         people_point(2, id) += p.y;
         people_point(3, id) += 1;
     }
-    
+
     for(int i=0;i<PEOPLE_NUM;i++){
         
         if(people_point != 0){
@@ -78,30 +78,3 @@ void GroundTruth::calculation_people_vector(PeopleData &now, PeopleData &past)
     }
 }
 
-
-int GroundTruth::get_index_from_xy(const double x,const double y)
-{
-	int _x = floor(x / RESOLUTION + 0.5) + GRID_WIDTH_2;
-	int _y = floor(y / RESOLUTION + 0.5) + GRID_WIDTH_2;
-	return _y * GRID_WIDTH_2 + _x;
-}
-
-int GroundTruth::get_x_index_from_index(const int index)
-{
-    return index % GRID_WIDTH;
-}
-
-int GroundTruth::get_y_index_from_index(const int index)
-{
-    return index / GRID_WIDTH;
-}
-
-double GroundTruth::get_x_from_index(const int index)
-{
-    return (get_x_index_from_index(index) - GRID_WIDTH_2) * RESOLUTION;
-}
-
-double GroundTruth::get_y_from_index(const int index)
-{
-    return (get_y_index_from_index(index) - GRID_WIDTH_2) * RESOLUTION;
-}

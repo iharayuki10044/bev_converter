@@ -70,13 +70,6 @@ public:
     calculation_peple_point(const cloud_ptr);
     calculation_people_vector(PeopleData&, PeopleData&);
 
-    is_valid_point(double x, double y);
-    get_index_from_xy(const double x,const double y);
-    get_x_index_from_index(const int index);
-    get_y_index_from_index(const int index);
-    get_x_from_index(const int index);
-    get_y_from_index(const int index);
-
 private:
 
     CloudXYZI pointcloud;
