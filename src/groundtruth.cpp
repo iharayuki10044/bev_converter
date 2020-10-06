@@ -11,6 +11,9 @@ GroundTruth::GroundTruth(void)
     local_nh.param("GRID_NUM", GRID_NUM, {});
     local_nh.param("PEOPLE_NUM", PEOPLE_NUM, {});
 
+    pc_subscriber = nh.subscribe("/cloud/dynamic", 10, &GroundTruth::pc_callback, this);
+    odom_subscriber = nh.subscribe("/odom", 10, &GroundTruth::odom_callback, this);
+    bev_grid_publisher = nh.advertise<nav_msgs::OccupancyGrid>("/bev/grid", 10);
 }
 
 void GroundTruth::executor(void)
@@ -19,15 +22,16 @@ void GroundTruth::executor(void)
 
     ros::Rate r(Hz);
 	while(ros::ok()){
-
-
-
-
-		if(){
-
-
         
+        
+        if(pc_callback_flag && odm_callback_frag){
+            std::cout << "people calculate" << std::endl;
+            copy_people_data(PeopleData&, PeopleData&);
+            calculation_people_point(cloud_ptr);
 		}
+
+        pc_callback_frag = false;
+        odom_callback_flag = false;
 
 		r.sleep();
 		ros::spinOnce();
@@ -44,8 +48,26 @@ void GroundTruth::formatter(void)
     grid_size = RANGE / GRID_NUM;
 }
 
+void GroundTruth::pc_callback(const sensor_msgs::PointCloud2ConstPtr &msg)
+{
+    sensor_msgs::PointCloud2 input_pc;
 
-void GroundTruth::calculation_peple_point(const CloudXYZIPtr& cloud_ptr)
+    input_pc = *msg;
+	pcl::fromROSMsg(input_pc, *pcl_input_pc);
+    pc_callback_flag = true;
+}
+
+void GroundTruth::odom_callback(const nav_msgs::OdometryConstPtr &msg)
+{
+    odom = *msg;
+    odom_callback_flag = true;
+}
+
+void GroundTruth::copy_people_data(PeopleData &new, PeopleData &old)
+{
+    old = new;
+}
+void GroundTruth::calculation_peple_point(const CloudXYZIPtr& cloud_ptr ,People)
 {
     std::cout << "--- calculation people point ---" << std::endl;
     int cloud_size = cloud_ptr->points.size();
@@ -64,8 +86,8 @@ void GroundTruth::calculation_peple_point(const CloudXYZIPtr& cloud_ptr)
     for(int i=0;i<PEOPLE_NUM;i++){
         
         if(people_point != 0){
-            people_data[i].x = people_point(1, id) /people(3, id);
-            people_data[i].y = people_point(2, id) /people(3, id);
+            people_data_new[i].x = people_point(1, id) /people(3, id);
+            people_data_new[i].y = people_point(2, id) /people(3, id);
         }
     }
 }

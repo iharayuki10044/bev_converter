@@ -69,8 +69,12 @@ public:
 
     calculation_peple_point(const cloud_ptr);
     calculation_people_vector(PeopleData&, PeopleData&);
+    copy_people_data(PeopleData&, PeopleData&);
 
 private:
+
+    bool pc_callback_frag = false;
+    bool odom_callback_flag = false;
 
     CloudXYZI pointcloud;
     double RESOLUTION;
@@ -81,7 +85,8 @@ private:
     int GRID_NUM;
     int PEOPLE_NUM;
 
-    PeopleData people_data;
+    PeopleData people_data_new;
+    PeopleData people_data_old;
 
 }
 
